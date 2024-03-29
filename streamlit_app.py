@@ -1,40 +1,69 @@
-import altair as alt
-import numpy as np
-import pandas as pd
 import streamlit as st
+import jaydebeapi
 
-"""
-# Welcome to Streamlit!
+def login_page():
+    # Set page config to wide layout and set the page background color
+    st.set_page_config(layout="wide", page_title="Login Page", page_icon="🔒", 
+                       initial_sidebar_state="collapsed")
+    # Set the background color
+    st.markdown(
+        """
+        <style>
+        body {
+            background-color: #7FFFD4; /* Aquamarine color */
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+    
+    # Title
+    st.title("Welcome to our App")
+    
+    # Login Section
+    st.write("Please login to continue:")
+    username = st.text_input("Username")
+    password = st.text_input("Password", type="password")
 
-Edit `/streamlit_app.py` to customize this app to your heart's desire :heart:.
-If you have any questions, checkout our [documentation](https://docs.streamlit.io) and [community
-forums](https://discuss.streamlit.io).
+    if st.button("Login"):
+        if username == "user" and password == "password":
+            st.success("Logged In as {}".format(username))
+            return True
+        else:
+            st.error("Invalid Username or Password")
+    return False
 
-In the meantime, below is an example of what you can do with just a few lines of code:
-"""
+def data_operations():
+    # Set page config to wide layout and set the page background color
 
-num_points = st.slider("Number of points in spiral", 1, 10000, 1100)
-num_turns = st.slider("Number of turns in spiral", 1, 300, 31)
+    # Set the background color
+    st.markdown(
+        """
+        <style>
+        body {
+            background-color: #7FFFD4; /* Aquamarine color */
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+    
+    # Title
+    st.title("Data Operations")
+    
+    # Data Input Section
+    st.write("Please enter the values of A and B:")
+    A = st.number_input("Value of A", value=0)
+    B = st.number_input("Value of B", value=0)
+    
+    if st.button("Execute"):
+        result = A + B
+        st.success(f"The result of {A} + {B} is {result}")
 
-indices = np.linspace(0, 1, num_points)
-theta = 2 * np.pi * num_turns * indices
-radius = indices
+def main():
+    if login_page():
+        data_operations()
 
-x = radius * np.cos(theta)
-y = radius * np.sin(theta)
+if __name__ == "__main__":
+    main()
 
-df = pd.DataFrame({
-    "x": x,
-    "y": y,
-    "idx": indices,
-    "rand": np.random.randn(num_points),
-})
-
-st.altair_chart(alt.Chart(df, height=700, width=700)
-    .mark_point(filled=True)
-    .encode(
-        x=alt.X("x", axis=None),
-        y=alt.Y("y", axis=None),
-        color=alt.Color("idx", legend=None, scale=alt.Scale()),
-        size=alt.Size("rand", legend=None, scale=alt.Scale(range=[1, 150])),
-    ))
